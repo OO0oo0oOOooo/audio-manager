@@ -24,8 +24,8 @@ public class AudioSystem : MonoBehaviour
 
     public void PlayAmbient(AudioClip clip)
     {
-        _ambientSource.Play();
         _ambientSource.clip = clip;
+        _ambientSource.Play();
     }
 
     public void PlayClipAtPos(int arrayIndex, Vector3 pos, float vol = 1)
