@@ -1,12 +1,23 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioSystem : MonoBehaviour
 {
-    [SerializeField] private AudioSource _ambientSource;
-    [SerializeField] private AudioSource _effectSource;
+    [Header("Audio Sources")]
+    [SerializeField] private AudioSource _menuSource;
+    [SerializeField] private AudioSource _musicSource;
+    [SerializeField] private AudioSource _gameSource;
+
 
     [Header("Audio Clips")]
-    public AudioClips _clips;
+    [SerializeField] private AudioClips _menuClips;
+    [SerializeField] private AudioClips _musicClips;
+    [SerializeField] private AudioClips _gameClips;
+
+
+    [Header("PlayClipAtPoint Mixer")]
+    [SerializeField] private AudioMixerGroup _mixerGroup;
 
     public static AudioSystem Instance { get; private set; }
     void Awake()
@@ -22,24 +33,93 @@ public class AudioSystem : MonoBehaviour
         }
     }
 
-    public void PlayAmbient(AudioClip clip)
+    public void PlayMusicClip(int array, int index, float vol = 1)
     {
-        _ambientSource.clip = clip;
-        _ambientSource.Play();
+        AudioClip clip = _musicClips.clipArrays[array].clips[index];
+        _musicSource.PlayOneShot(clip);
     }
 
-    public void PlayClipAtPos(int arrayIndex, Vector3 pos, float vol = 1)
+    public void PlayMenuClip(int array, int index, float vol = 1)
+    {
+        AudioClip clip = _menuClips.clipArrays[array].clips[index];
+        _menuSource.PlayOneShot(clip);
+    }
+
+    public void PlayGameClip(int array, int index, float vol = 1)
+    {
+        AudioClip clip = _gameClips.clipArrays[array].clips[index];
+        _gameSource.PlayOneShot(clip, vol);
+    }
+
+    public void PlayRandomClipAtPoint(int array, Vector3 pos, float vol = 1)
     {
         // Use enum maybe
-        int i = Random.Range(0, _clips.clipArrays[arrayIndex].clips.Length);
-        AudioClip clip = _clips.clipArrays[arrayIndex].clips[i];
+        int i = Random.Range(0, _gameClips.clipArrays[array].clips.Length);
+        AudioClip clip = _gameClips.clipArrays[array].clips[i];
+
+        PlayClipAtPoint(clip, pos, vol);
+    }
+
+    public void PlayRandomClipAtPointStatic(int array, Vector3 pos, float vol = 1)
+    {
+        // Use enum maybe
+        int i = Random.Range(0, _gameClips.clipArrays[array].clips.Length);
+        AudioClip clip = _gameClips.clipArrays[array].clips[i];
 
         AudioSource.PlayClipAtPoint(clip, pos, vol);
     }
 
-    public void PlaySound(int arrayIndex, float vol = 1)
+    // Note: Could use a prefab but this is better for switching between projects
+    private void PlayClipAtPoint(AudioClip clip, Vector3 position, float volume)
     {
-        AudioClip clip = _clips.clipArrays[arrayIndex].clips[0];
-        _ambientSource.PlayOneShot(clip, vol);
+        GameObject audioObject = new GameObject("AudioObject");
+        audioObject.transform.position = position;
+
+        AudioSource audioSource = audioObject.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = _mixerGroup;
+        audioSource.PlayOneShot(clip, volume);
+
+        Destroy(audioObject, clip.length);
+    }
+
+    private Dictionary<int, AudioSource> _audioSources = new Dictionary<int, AudioSource>();
+    public int GenerateId()
+    {
+        int id = _audioSources.Count;
+        while (_audioSources.ContainsKey(id))
+        {
+            id++;
+        }
+        return id;
+    }
+
+    public int PlayOnParent(int array, int index, Transform parent, float volume = 1)
+    {
+        AudioClip clip = _gameClips.clipArrays[array].clips[index];
+
+        GameObject audioObject = new GameObject("AudioObject");
+        audioObject.transform.parent = parent;
+
+        AudioSource audioSource = audioObject.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = _mixerGroup;
+        audioSource.loop = true;
+        audioSource.clip = clip;
+        audioSource.volume = volume;
+        audioSource.Play();
+        
+        int id = GenerateId();
+        _audioSources[id] = audioSource;
+        return id;
+    }
+
+    public void StopOnParent(int id)
+    {
+        if (_audioSources.ContainsKey(id))
+        {
+            AudioSource audioSource = _audioSources[id];
+            audioSource.Stop();
+            Destroy(audioSource.gameObject);
+            _audioSources.Remove(id);
+        }
     }
 }
