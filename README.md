@@ -1,8 +1,13 @@
 # audio-manager
 Basic audio manager
 
-# How to use
+# Features
+* Custom PlayatPosition() uses AudioMixer
+* PlayOnParent() creates audiosource on a transform that loops until StopOnParent()
+
+# Setup
 * Drop prefab in scene
-* Assign Effect Source and Music Source children
-* Create Audio Clips scriptable object
-* Assign Scriptable object
+* Assign the scripts AudioSources from children
+* Create Audio Clips scriptable objects
+* Assign Scriptable objects to script
+* Assign Mixer Group that you want PlayAtPosition() and PlayOnParent() to use
