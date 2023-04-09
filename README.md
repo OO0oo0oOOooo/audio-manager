@@ -7,8 +7,8 @@ Basic audio manager
 
 # Setup
 * Drop prefab in scene
-* Assign the scripts AudioSources from children
-* Create Audio Clips scriptable objects
-* Assign Scriptable objects to script
+* Assign the AudioSources from children
+* Create Audio Clips scriptable object
+* Assign Scriptable objects
 * Assign Mixer Group that you want PlayRandomClipAtPosition() and PlayOnParent() to use
 * Place VolumeSettings script in the scene and assign the mixer and ui sliders
