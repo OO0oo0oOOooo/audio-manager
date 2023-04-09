@@ -11,4 +11,4 @@ Basic audio manager
 * Create Audio Clips scriptable objects
 * Assign Scriptable objects to script
 * Assign Mixer Group that you want PlayRandomClipAtPosition() and PlayOnParent() to use
-* Place VolumeSettings scriptin the scene and assign the mixer and ui sliders
+* Place VolumeSettings script in the scene and assign the mixer and ui sliders
