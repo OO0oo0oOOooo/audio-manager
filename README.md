@@ -1,5 +1,4 @@
-# audio-manager
-Basic audio manager
+# Basic audio manager
 
 # Features
 * Custom PlayRandomClipAtPosition() uses AudioMixer
