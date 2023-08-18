@@ -18,9 +18,9 @@ Call methods from Singleton "AudioSystem.Instance".
 When adding Audio Clips to the Audio Clip Scriptable Objects the first list should be different sounds(grass step, rock step, attack), the second list should be varuations of that sound (grass step 01 - grass step 09). To use a random variation use "PlayRandomClipAtPoint(int array, vector3 pos, float volume)". You can also use "PlayClipAtPoint(int array, int index, vector3 pos, float volume)" to pick a specific variation manually.
 
 # Oneshot
-* PlayMusicClip
-* PlayMenuClip
-* PlayGameClip
+* PlayMusicClipOneShot()
+* PlayMenuClipOneShot()
+* PlayGameClipOneShot()
 
 # GameClip AudioSource Methods
 * PlayClipAtPoint()
