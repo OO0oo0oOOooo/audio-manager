@@ -51,19 +51,19 @@ public class AudioSystem : MonoBehaviour
         _gameSource.PlayOneShot(clip, vol);
     }
 
-    public void PlayClipAtPoint(int array, int index, Vector3 pos, float vol = 1)
+    public void PlayClipAtPoint(int array, int index, Vector3 pos, float vol = 1, float pitch = 1)
     {
         AudioClip clip = _gameClips.clipArrays[array].clips[index];
 
-        PlayOneShotAtPoint(clip, pos, vol);
+        PlayOneShotAtPoint(clip, pos, vol, pitch);
     }
 
-    public void PlayRandomClipAtPoint(int array, Vector3 pos, float vol = 1)
+    public void PlayRandomClipAtPoint(int array, Vector3 pos, float vol = 1, float pitch = 1)
     {
         int i = Random.Range(0, _gameClips.clipArrays[array].clips.Length);
         AudioClip clip = _gameClips.clipArrays[array].clips[i];
 
-        PlayOneShotAtPoint(clip, pos, vol);
+        PlayOneShotAtPoint(clip, pos, vol, pitch);
     }
 
     // This parents a clip to a transform
@@ -110,13 +110,16 @@ public class AudioSystem : MonoBehaviour
     }
 
     // This is affected by the mixer
-    private void PlayOneShotAtPoint(AudioClip clip, Vector3 position, float volume)
+    private void PlayOneShotAtPoint(AudioClip clip, Vector3 position, float volume = 1, float pitch = 1)
     {
         GameObject audioObject = new GameObject("AudioObject");
         audioObject.transform.position = position;
 
         AudioSource audioSource = audioObject.AddComponent<AudioSource>();
         audioSource.outputAudioMixerGroup = _mixerGroup;
+        audioSource.volume = volume;
+        audioSource.pitch = pitch;
+
         audioSource.PlayOneShot(clip, volume);
 
         Destroy(audioObject, clip.length);
