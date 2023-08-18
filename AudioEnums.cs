@@ -4,14 +4,12 @@ public enum AudioEnums
     RockStep,
     GrassLand,
     RockLand,
-    Swing,
     Hit,
-    Slide,
 }
 
 public enum MusicAudioEnums
 {
-    Default
+    Song1
 }
 
 public enum MenuAudioEnums
